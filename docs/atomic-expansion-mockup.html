@@ -1,0 +1,1118 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atomic Expansion Effect - Iron Man 2 Style</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-cyan: #00d4ff;
+            --secondary-blue: #0a84ff;
+            --accent-gold: #ffd700;
+            --core-white: #ffffff;
+            --bg-dark: #0a0a0f;
+            --bg-darker: #050508;
+            --hologram: rgba(0, 212, 255, 0.15);
+            --hologram-strong: rgba(0, 212, 255, 0.4);
+            --text-primary: #ffffff;
+            --text-dim: rgba(255, 255, 255, 0.4);
+        }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Background */
+        .background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .floor-grid {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%) perspective(800px) rotateX(70deg);
+            width: 200%;
+            height: 80%;
+            background-image: 
+                linear-gradient(var(--primary-cyan) 1px, transparent 1px),
+                linear-gradient(90deg, var(--primary-cyan) 1px, transparent 1px);
+            background-size: 80px 80px;
+            opacity: 0.1;
+        }
+
+        .vignette {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at center, transparent 0%, var(--bg-darker) 100%);
+        }
+
+        .scanline {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(transparent 50%, rgba(0, 212, 255, 0.015) 50%);
+            background-size: 100% 4px;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        /* Instructions */
+        .instructions {
+            position: fixed;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(10, 10, 15, 0.9);
+            border: 1px solid var(--hologram);
+            padding: 15px 40px;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--primary-cyan);
+            z-index: 100;
+            letter-spacing: 2px;
+        }
+
+        .instructions span {
+            color: var(--accent-gold);
+        }
+
+        /* Main Container */
+        .atomic-container {
+            position: relative;
+            width: 800px;
+            height: 800px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Core - The central nucleus */
+        .core {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            cursor: pointer;
+            z-index: 100;
+            transition: transform 0.3s ease;
+        }
+
+        .core:hover {
+            transform: scale(1.1);
+        }
+
+        .core-inner {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 40px;
+            height: 40px;
+            background: radial-gradient(circle, var(--core-white) 0%, var(--primary-cyan) 50%, transparent 70%);
+            border-radius: 50%;
+            box-shadow: 
+                0 0 30px var(--primary-cyan),
+                0 0 60px var(--primary-cyan),
+                0 0 90px rgba(0, 212, 255, 0.5);
+            animation: corePulse 2s ease-in-out infinite;
+        }
+
+        @keyframes corePulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+            50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.8; }
+        }
+
+        .core-ring {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 70px;
+            height: 70px;
+            border: 2px solid var(--primary-cyan);
+            border-radius: 50%;
+            opacity: 0.5;
+            animation: coreRingSpin 8s linear infinite;
+        }
+
+        .core-ring:nth-child(2) {
+            width: 85px;
+            height: 85px;
+            border-style: dashed;
+            animation-direction: reverse;
+            animation-duration: 12s;
+        }
+
+        @keyframes coreRingSpin {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        /* Orbital paths */
+        .orbital-path {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            border: 1px solid rgba(0, 212, 255, 0.1);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .orbital-path.visible {
+            opacity: 1;
+        }
+
+        .orbital-path:nth-child(1) { width: 200px; height: 200px; }
+        .orbital-path:nth-child(2) { width: 320px; height: 320px; }
+        .orbital-path:nth-child(3) { width: 450px; height: 450px; }
+        .orbital-path:nth-child(4) { width: 580px; height: 580px; }
+
+        /* Electrons / Menu Items */
+        .electron {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 70px;
+            height: 70px;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            z-index: 50;
+        }
+
+        .electron.expanded {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .electron-content {
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 10, 15, 0.9);
+            border: 1px solid var(--hologram);
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .electron-content::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(
+                transparent 0deg,
+                var(--primary-cyan) 60deg,
+                transparent 120deg
+            );
+            opacity: 0;
+            animation: none;
+        }
+
+        .electron.expanded .electron-content::before {
+            animation: electronSweep 3s linear infinite;
+            opacity: 0.3;
+        }
+
+        @keyframes electronSweep {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .electron-content:hover {
+            border-color: var(--primary-cyan);
+            box-shadow: 
+                0 0 20px rgba(0, 212, 255, 0.5),
+                0 0 40px rgba(0, 212, 255, 0.3),
+                inset 0 0 20px rgba(0, 212, 255, 0.1);
+            transform: scale(1.15);
+        }
+
+        .electron-icon {
+            font-size: 1.5rem;
+            margin-bottom: 3px;
+        }
+
+        .electron-label {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.6rem;
+            color: var(--text-dim);
+            letter-spacing: 1px;
+        }
+
+        .electron-content:hover .electron-label {
+            color: var(--primary-cyan);
+        }
+
+        /* Connection beams from core to electrons */
+        .connection-beam {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary-cyan), transparent);
+            transform-origin: left center;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            pointer-events: none;
+        }
+
+        .connection-beam.visible {
+            opacity: 0.4;
+        }
+
+        /* Energy particles along beams */
+        .energy-particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--primary-cyan);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--primary-cyan);
+            opacity: 0;
+        }
+
+        .energy-particle.active {
+            animation: particleFlow 1s linear infinite;
+        }
+
+        @keyframes particleFlow {
+            0% { left: 0; opacity: 1; }
+            100% { left: 100%; opacity: 0; }
+        }
+
+        /* Expanded Content Panel */
+        .content-panel {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0) rotate(-10deg);
+            width: 750px;
+            max-height: 85vh;
+            background: rgba(5, 5, 10, 0.95);
+            border: 1px solid var(--primary-cyan);
+            opacity: 0;
+            transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            z-index: 200;
+            overflow: hidden;
+        }
+
+        .content-panel.active {
+            transform: translate(-50%, -50%) scale(1) rotate(0deg);
+            opacity: 1;
+        }
+
+        /* Panel atomic decoration */
+        .panel-atom-deco {
+            position: absolute;
+            top: -100px;
+            right: -100px;
+            width: 200px;
+            height: 200px;
+            border: 1px solid var(--hologram);
+            border-radius: 50%;
+            opacity: 0.3;
+        }
+
+        .panel-atom-deco::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 150px;
+            height: 150px;
+            border: 1px dashed var(--hologram);
+            border-radius: 50%;
+            animation: coreRingSpin 20s linear infinite;
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 25px 30px;
+            border-bottom: 1px solid var(--hologram);
+            background: linear-gradient(180deg, rgba(0, 212, 255, 0.1), transparent);
+        }
+
+        .panel-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.3rem;
+            color: var(--primary-cyan);
+            letter-spacing: 4px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .panel-title-icon {
+            font-size: 1.8rem;
+        }
+
+        .panel-close {
+            width: 45px;
+            height: 45px;
+            background: transparent;
+            border: 1px solid var(--hologram);
+            color: var(--text-dim);
+            font-size: 1.3rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .panel-close::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent 40%, rgba(255, 59, 48, 0.3) 50%, transparent 60%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .panel-close:hover {
+            border-color: #ff3b30;
+            color: #ff3b30;
+            box-shadow: 0 0 20px rgba(255, 59, 48, 0.3);
+        }
+
+        .panel-close:hover::before {
+            opacity: 1;
+        }
+
+        .panel-content {
+            padding: 30px;
+            max-height: 65vh;
+            overflow-y: auto;
+        }
+
+        .panel-content::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .panel-content::-webkit-scrollbar-track {
+            background: var(--bg-darker);
+        }
+
+        .panel-content::-webkit-scrollbar-thumb {
+            background: var(--primary-cyan);
+        }
+
+        /* Atomic reveal animation for content */
+        .reveal-item {
+            opacity: 0;
+            transform: translateY(30px) scale(0.9);
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .content-panel.active .reveal-item {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        .content-panel.active .reveal-item:nth-child(1) { transition-delay: 0.1s; }
+        .content-panel.active .reveal-item:nth-child(2) { transition-delay: 0.2s; }
+        .content-panel.active .reveal-item:nth-child(3) { transition-delay: 0.3s; }
+        .content-panel.active .reveal-item:nth-child(4) { transition-delay: 0.4s; }
+        .content-panel.active .reveal-item:nth-child(5) { transition-delay: 0.5s; }
+        .content-panel.active .reveal-item:nth-child(6) { transition-delay: 0.6s; }
+
+        /* Timeline content style */
+        .timeline {
+            position: relative;
+            padding-left: 40px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 12px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(180deg, var(--primary-cyan), var(--hologram), transparent);
+        }
+
+        .timeline-entry {
+            position: relative;
+            margin-bottom: 35px;
+        }
+
+        .timeline-node {
+            position: absolute;
+            left: -34px;
+            top: 8px;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .timeline-node::before {
+            content: '';
+            width: 12px;
+            height: 12px;
+            background: var(--bg-dark);
+            border: 2px solid var(--primary-cyan);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--primary-cyan);
+        }
+
+        .timeline-node.gold::before {
+            border-color: var(--accent-gold);
+            box-shadow: 0 0 10px var(--accent-gold);
+        }
+
+        /* Orbiting dot around timeline node */
+        .timeline-node::after {
+            content: '';
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--primary-cyan);
+            border-radius: 50%;
+            animation: orbitNode 2s linear infinite;
+        }
+
+        .timeline-node.gold::after {
+            background: var(--accent-gold);
+        }
+
+        @keyframes orbitNode {
+            0% { transform: rotate(0deg) translateX(12px) rotate(0deg); }
+            100% { transform: rotate(360deg) translateX(12px) rotate(-360deg); }
+        }
+
+        .timeline-card {
+            background: var(--hologram);
+            border: 1px solid transparent;
+            padding: 20px 25px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .timeline-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .timeline-card:hover::before {
+            left: 100%;
+        }
+
+        .timeline-card:hover {
+            border-color: var(--primary-cyan);
+            transform: translateX(10px);
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.2);
+        }
+
+        .timeline-year {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--primary-cyan);
+            margin-bottom: 8px;
+            letter-spacing: 2px;
+        }
+
+        .timeline-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+
+        .timeline-desc {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.7;
+        }
+
+        .timeline-tags {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            padding: 4px 12px;
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid var(--hologram);
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.65rem;
+            color: var(--primary-cyan);
+            letter-spacing: 1px;
+        }
+
+        /* Overlay */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0);
+            backdrop-filter: blur(0px);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.5s ease;
+            z-index: 150;
+        }
+
+        .overlay.active {
+            opacity: 1;
+            visibility: visible;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+        }
+
+        /* Explosion particles */
+        .explosion-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .explosion-particle {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 3px;
+            height: 3px;
+            background: var(--primary-cyan);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+        }
+
+        /* Status bar */
+        .status-bar {
+            position: fixed;
+            bottom: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 25px;
+            padding: 12px 30px;
+            background: rgba(10, 10, 15, 0.9);
+            border: 1px solid var(--hologram);
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            letter-spacing: 1px;
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            background: #00ff88;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #00ff88;
+            animation: statusPulse 2s infinite;
+        }
+
+        @keyframes statusPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Floating data fragments */
+        .data-fragment {
+            position: fixed;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.6rem;
+            color: rgba(0, 212, 255, 0.3);
+            pointer-events: none;
+            animation: fragmentFloat 20s linear infinite;
+        }
+
+        @keyframes fragmentFloat {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.3; }
+            90% { opacity: 0.3; }
+            100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* Sound wave effect when expanding */
+        .sound-wave {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100px;
+            height: 100px;
+            border: 2px solid var(--primary-cyan);
+            border-radius: 50%;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .sound-wave.active {
+            animation: soundWaveExpand 0.8s ease-out forwards;
+        }
+
+        @keyframes soundWaveExpand {
+            0% {
+                width: 100px;
+                height: 100px;
+                opacity: 0.8;
+            }
+            100% {
+                width: 600px;
+                height: 600px;
+                opacity: 0;
+            }
+        }
+
+        /* Holographic flicker */
+        @keyframes holoFlicker {
+            0%, 100% { opacity: 1; }
+            92% { opacity: 1; }
+            93% { opacity: 0.8; }
+            94% { opacity: 1; }
+            95% { opacity: 0.9; }
+            96% { opacity: 1; }
+        }
+
+        .content-panel.active {
+            animation: holoFlicker 4s infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="background">
+        <div class="floor-grid"></div>
+        <div class="vignette"></div>
+    </div>
+
+    <div class="scanline"></div>
+
+    <!-- Floating data fragments -->
+    <div class="data-fragment" style="left: 10%; animation-delay: 0s;">10110101</div>
+    <div class="data-fragment" style="left: 25%; animation-delay: 3s;">STARK</div>
+    <div class="data-fragment" style="left: 40%; animation-delay: 7s;">01001110</div>
+    <div class="data-fragment" style="left: 60%; animation-delay: 2s;">JARVIS</div>
+    <div class="data-fragment" style="left: 75%; animation-delay: 5s;">11010011</div>
+    <div class="data-fragment" style="left: 90%; animation-delay: 9s;">MARK-V</div>
+
+    <div class="instructions">
+        點擊中心核心 <span>EXPAND</span> 展開選單 | 點擊項目開啟詳細內容
+    </div>
+
+    <div class="atomic-container">
+        <!-- Orbital paths -->
+        <div class="orbital-path" id="orbit1"></div>
+        <div class="orbital-path" id="orbit2"></div>
+        <div class="orbital-path" id="orbit3"></div>
+        <div class="orbital-path" id="orbit4"></div>
+
+        <!-- Connection beams -->
+        <div class="connection-beam" id="beam1"></div>
+        <div class="connection-beam" id="beam2"></div>
+        <div class="connection-beam" id="beam3"></div>
+        <div class="connection-beam" id="beam4"></div>
+        <div class="connection-beam" id="beam5"></div>
+        <div class="connection-beam" id="beam6"></div>
+
+        <!-- Sound waves -->
+        <div class="sound-wave" id="wave1"></div>
+        <div class="sound-wave" id="wave2"></div>
+        <div class="sound-wave" id="wave3"></div>
+
+        <!-- Explosion particles container -->
+        <div class="explosion-container" id="explosionContainer"></div>
+
+        <!-- Core -->
+        <div class="core" id="core" onclick="toggleExpand()">
+            <div class="core-ring"></div>
+            <div class="core-ring"></div>
+            <div class="core-inner"></div>
+        </div>
+
+        <!-- Electrons / Menu Items -->
+        <div class="electron" id="electron1" data-panel="work" data-angle="270" data-distance="160">
+            <div class="electron-content" onclick="openPanel('work')">
+                <span class="electron-icon">💼</span>
+                <span class="electron-label">工作</span>
+            </div>
+        </div>
+        <div class="electron" id="electron2" data-panel="skills" data-angle="330" data-distance="160">
+            <div class="electron-content" onclick="openPanel('skills')">
+                <span class="electron-icon">⚡</span>
+                <span class="electron-label">技能</span>
+            </div>
+        </div>
+        <div class="electron" id="electron3" data-panel="travel" data-angle="30" data-distance="160">
+            <div class="electron-content" onclick="openPanel('travel')">
+                <span class="electron-icon">✈️</span>
+                <span class="electron-label">旅遊</span>
+            </div>
+        </div>
+        <div class="electron" id="electron4" data-panel="contact" data-angle="90" data-distance="160">
+            <div class="electron-content" onclick="openPanel('contact')">
+                <span class="electron-icon">📧</span>
+                <span class="electron-label">聯絡</span>
+            </div>
+        </div>
+        <div class="electron" id="electron5" data-panel="student" data-angle="150" data-distance="160">
+            <div class="electron-content" onclick="openPanel('student')">
+                <span class="electron-icon">📚</span>
+                <span class="electron-label">學業</span>
+            </div>
+        </div>
+        <div class="electron" id="electron6" data-panel="about" data-angle="210" data-distance="160">
+            <div class="electron-content" onclick="openPanel('about')">
+                <span class="electron-icon">👤</span>
+                <span class="electron-label">關於</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="status-bar">
+        <div class="status-item">
+            <div class="status-dot"></div>
+            <span>ATOMIC INTERFACE v2.0</span>
+        </div>
+        <div class="status-item">
+            <span>STATUS: <span id="statusText">READY</span></span>
+        </div>
+        <div class="status-item">
+            <span id="currentTime"></span>
+        </div>
+    </div>
+
+    <!-- Overlay -->
+    <div class="overlay" id="overlay" onclick="closePanel()"></div>
+
+    <!-- Content Panel -->
+    <div class="content-panel" id="contentPanel">
+        <div class="panel-atom-deco"></div>
+        <div class="panel-header">
+            <div class="panel-title">
+                <span class="panel-title-icon" id="panelIcon">💼</span>
+                <span id="panelTitle">工作經歷 WORK EXPERIENCE</span>
+            </div>
+            <button class="panel-close" onclick="closePanel()">✕</button>
+        </div>
+        <div class="panel-content" id="panelContent">
+            <!-- Content will be injected here -->
+        </div>
+    </div>
+
+    <script>
+        // State
+        let isExpanded = false;
+        let activePanel = null;
+
+        // Content data
+        const panelData = {
+            work: {
+                icon: '💼',
+                title: '工作經歷 WORK EXPERIENCE',
+                content: `
+                    <div class="timeline">
+                        <div class="timeline-entry reveal-item">
+                            <div class="timeline-node gold"></div>
+                            <div class="timeline-card">
+                                <div class="timeline-year">2021 - PRESENT</div>
+                                <div class="timeline-title">軟體工程師 Software Engineer</div>
+                                <div class="timeline-desc">專注於前端開發，使用 Vue.js、Three.js 等技術打造互動式網頁應用。參與多個大型專案，從需求分析到上線部署全程參與。</div>
+                                <div class="timeline-tags">
+                                    <span class="tag">VUE.JS</span>
+                                    <span class="tag">THREE.JS</span>
+                                    <span class="tag">TYPESCRIPT</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="timeline-entry reveal-item">
+                            <div class="timeline-node"></div>
+                            <div class="timeline-card">
+                                <div class="timeline-year">2019 - 2021</div>
+                                <div class="timeline-title">英文老師 English Teacher</div>
+                                <div class="timeline-desc">設計課程內容、帶領學生探索語言學習的樂趣。培養了優秀的溝通能力和耐心。</div>
+                                <div class="timeline-tags">
+                                    <span class="tag">TEACHING</span>
+                                    <span class="tag">CURRICULUM</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="timeline-entry reveal-item">
+                            <div class="timeline-node"></div>
+                            <div class="timeline-card">
+                                <div class="timeline-year">2017 - 2019</div>
+                                <div class="timeline-title">健身教練 Fitness Coach</div>
+                                <div class="timeline-desc">第一份正職工作，學會目標設定、客戶管理和激勵他人的技巧。</div>
+                                <div class="timeline-tags">
+                                    <span class="tag">FITNESS</span>
+                                    <span class="tag">COACHING</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="timeline-entry reveal-item">
+                            <div class="timeline-node"></div>
+                            <div class="timeline-card">
+                                <div class="timeline-year">2015 - 2017</div>
+                                <div class="timeline-title">補習班助教 Tutoring Assistant</div>
+                                <div class="timeline-desc">學生時期的打工經驗，第一次接觸教學工作，發現自己對教育的熱情。</div>
+                                <div class="timeline-tags">
+                                    <span class="tag">PART-TIME</span>
+                                    <span class="tag">EDUCATION</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            skills: {
+                icon: '⚡',
+                title: '技能分析 SKILL ANALYSIS',
+                content: `<div style="text-align: center; padding: 40px; color: var(--text-dim);">技能展示面板內容...</div>`
+            },
+            travel: {
+                icon: '✈️',
+                title: '旅遊足跡 TRAVEL GALLERY',
+                content: `<div style="text-align: center; padding: 40px; color: var(--text-dim);">旅遊相簿面板內容...</div>`
+            },
+            contact: {
+                icon: '📧',
+                title: '聯絡方式 CONTACT',
+                content: `<div style="text-align: center; padding: 40px; color: var(--text-dim);">聯絡資訊面板內容...</div>`
+            },
+            student: {
+                icon: '📚',
+                title: '學生時期 STUDENT LIFE',
+                content: `<div style="text-align: center; padding: 40px; color: var(--text-dim);">學生故事面板內容...</div>`
+            },
+            about: {
+                icon: '👤',
+                title: '關於我 ABOUT ME',
+                content: `<div style="text-align: center; padding: 40px; color: var(--text-dim);">個人介紹面板內容...</div>`
+            }
+        };
+
+        // Update time
+        function updateTime() {
+            const now = new Date();
+            document.getElementById('currentTime').textContent = 
+                now.toLocaleTimeString('en-US', { hour12: false });
+        }
+        setInterval(updateTime, 1000);
+        updateTime();
+
+        // Create explosion particles
+        function createExplosion() {
+            const container = document.getElementById('explosionContainer');
+            container.innerHTML = '';
+            
+            for (let i = 0; i < 30; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'explosion-particle';
+                container.appendChild(particle);
+                
+                const angle = (Math.PI * 2 / 30) * i + Math.random() * 0.5;
+                const distance = 100 + Math.random() * 150;
+                const duration = 0.6 + Math.random() * 0.4;
+                const delay = Math.random() * 0.2;
+                
+                particle.animate([
+                    { 
+                        transform: 'translate(-50%, -50%) scale(1)',
+                        opacity: 1
+                    },
+                    { 
+                        transform: `translate(calc(-50% + ${Math.cos(angle) * distance}px), calc(-50% + ${Math.sin(angle) * distance}px)) scale(0)`,
+                        opacity: 0
+                    }
+                ], {
+                    duration: duration * 1000,
+                    delay: delay * 1000,
+                    easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+                    fill: 'forwards'
+                });
+            }
+        }
+
+        // Trigger sound waves
+        function triggerSoundWaves() {
+            ['wave1', 'wave2', 'wave3'].forEach((id, index) => {
+                const wave = document.getElementById(id);
+                wave.classList.remove('active');
+                setTimeout(() => {
+                    wave.classList.add('active');
+                    setTimeout(() => wave.classList.remove('active'), 800);
+                }, index * 150);
+            });
+        }
+
+        // Toggle expand
+        function toggleExpand() {
+            isExpanded = !isExpanded;
+            
+            const electrons = document.querySelectorAll('.electron');
+            const orbits = document.querySelectorAll('.orbital-path');
+            const beams = document.querySelectorAll('.connection-beam');
+            const statusText = document.getElementById('statusText');
+            
+            if (isExpanded) {
+                // Explosion effect
+                createExplosion();
+                triggerSoundWaves();
+                
+                statusText.textContent = 'EXPANDED';
+                
+                // Show orbital paths with delay
+                orbits.forEach((orbit, i) => {
+                    setTimeout(() => {
+                        orbit.classList.add('visible');
+                    }, i * 100);
+                });
+                
+                // Expand electrons outward
+                electrons.forEach((electron, index) => {
+                    const angle = parseFloat(electron.dataset.angle);
+                    const distance = parseFloat(electron.dataset.distance);
+                    const angleRad = angle * Math.PI / 180;
+                    
+                    const x = Math.cos(angleRad) * distance;
+                    const y = Math.sin(angleRad) * distance;
+                    
+                    setTimeout(() => {
+                        electron.style.transform = `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`;
+                        electron.classList.add('expanded');
+                        
+                        // Setup connection beam
+                        const beam = beams[index];
+                        if (beam) {
+                            const beamLength = distance - 35;
+                            beam.style.width = `${beamLength}px`;
+                            beam.style.transform = `rotate(${angle}deg)`;
+                            beam.classList.add('visible');
+                        }
+                    }, 100 + index * 80);
+                });
+            } else {
+                statusText.textContent = 'READY';
+                
+                // Hide everything
+                orbits.forEach(orbit => orbit.classList.remove('visible'));
+                beams.forEach(beam => beam.classList.remove('visible'));
+                
+                electrons.forEach(electron => {
+                    electron.style.transform = 'translate(-50%, -50%)';
+                    electron.classList.remove('expanded');
+                });
+            }
+        }
+
+        // Open panel
+        function openPanel(panelId) {
+            if (!isExpanded) return;
+            
+            const data = panelData[panelId];
+            if (!data) return;
+            
+            document.getElementById('panelIcon').textContent = data.icon;
+            document.getElementById('panelTitle').textContent = data.title;
+            document.getElementById('panelContent').innerHTML = data.content;
+            
+            document.getElementById('overlay').classList.add('active');
+            document.getElementById('contentPanel').classList.add('active');
+            document.getElementById('statusText').textContent = 'VIEWING: ' + panelId.toUpperCase();
+            
+            activePanel = panelId;
+        }
+
+        // Close panel
+        function closePanel() {
+            document.getElementById('overlay').classList.remove('active');
+            document.getElementById('contentPanel').classList.remove('active');
+            document.getElementById('statusText').textContent = isExpanded ? 'EXPANDED' : 'READY';
+            activePanel = null;
+        }
+
+        // Keyboard controls
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                if (activePanel) {
+                    closePanel();
+                } else if (isExpanded) {
+                    toggleExpand();
+                }
+            } else if (e.key === ' ' || e.key === 'Enter') {
+                if (!activePanel) {
+                    toggleExpand();
+                }
+            }
+        });
+
+        // Prevent content panel clicks from closing
+        document.getElementById('contentPanel').addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+    </script>
+</body>
+</html>
