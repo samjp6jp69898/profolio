@@ -1,0 +1,31 @@
+:root {
+  --primary-cyan: #00d4ff;
+  --secondary-blue: #0a84ff;
+  --accent-gold: #ffd700;
+  --warning-red: #ff3b30;
+  --bg-dark: #0a0a0f;
+  --bg-darker: #050508;
+  --bg-panel: rgba(10, 10, 15, 0.9);
+  --hologram: rgba(0, 212, 255, 0.15);
+  --hologram-strong: rgba(0, 212, 255, 0.4);
+  --hologram-border: rgba(0, 212, 255, 0.6);
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.7);
+  --text-dim: rgba(255, 255, 255, 0.4);
+  --grid-line: rgba(0, 212, 255, 0.08);
+  --glow-cyan: 0 0 20px rgba(0, 212, 255, 0.5), 0 0 40px rgba(0, 212, 255, 0.3);
+  --glow-cyan-strong: 0 0 30px rgba(0, 212, 255, 0.7), 0 0 60px rgba(0, 212, 255, 0.4);
+  --glow-gold: 0 0 20px rgba(255, 215, 0, 0.5), 0 0 40px rgba(255, 215, 0, 0.3);
+  --glow-text: 0 0 10px rgba(0, 212, 255, 0.8);
+  --font-display: 'Orbitron', sans-serif;
+  --font-body: 'Rajdhani', sans-serif;
+  --font-mono: 'Share Tech Mono', monospace;
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.3s ease;
+  --z-background: -1;
+  --z-content: 1;
+  --z-hud: 10;
+  --z-menu: 20;
+  --z-panel: 30;
+  --z-loading: 100;
+}

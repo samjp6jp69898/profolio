@@ -1,59 +1,49 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import LoadingScreen from './components/LoadingScreen.vue'
+import { onMounted, onUnmounted } from 'vue'
+import { useUIStore } from '@/stores/uiStore'
+import AnimatedBackground from '@/components/ui/AnimatedBackground.vue'
+import HUD from '@/components/ui/HUD.vue'
+import AtomicMenu from '@/components/ui/AtomicMenu.vue'
+import LoadingScreen from '@/components/ui/LoadingScreen.vue'
+import WorkPanel from '@/components/panels/WorkPanel.vue'
+import SkillsPanel from '@/components/panels/SkillsPanel.vue'
+import TravelPanel from '@/components/panels/TravelPanel.vue'
+import AboutPanel from '@/components/panels/AboutPanel.vue'
 
+const uiStore = useUIStore()
 
-const isLoaded = ref(false)
-
-const onLoadingComplete = () => {
-  isLoaded.value = true
+function handleKeydown(e: KeyboardEvent) {
+  if (e.code === 'Space' && !uiStore.isPanelOpen) {
+    e.preventDefault()
+    uiStore.toggleMenu()
+  } else if (e.code === 'Escape') {
+    if (uiStore.isPanelOpen) uiStore.closePanel()
+    else if (uiStore.isMenuOpen) uiStore.toggleMenu()
+  } else if (e.key >= '1' && e.key <= '6' && !uiStore.isPanelOpen) {
+    const index = parseInt(e.key) - 1
+    if (uiStore.menuItems[index]) uiStore.openPanel(uiStore.menuItems[index].id)
+  }
 }
+
+onMounted(() => window.addEventListener('keydown', handleKeydown))
+onUnmounted(() => window.removeEventListener('keydown', handleKeydown))
 </script>
 
 <template>
-  <div id="app">
-    <!-- Loading 畫面 -->
-    <LoadingScreen @complete="onLoadingComplete" />
-    
-    <!-- 主大廳（Loading 完成後顯示） -->
- 
+  <div class="app">
+    <LoadingScreen />
+    <AnimatedBackground />
+    <HUD />
+    <AtomicMenu />
+    <WorkPanel />
+    <SkillsPanel />
+    <TravelPanel />
+    <ContactPanel />
+    <EducationPanel />
+    <AboutPanel />
   </div>
 </template>
 
-<style>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-html, body {
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-}
-
-#app {
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  font-family: 'Rajdhani', sans-serif;
-  background: #0a0a0f;
-  color: #ffffff;
-  overflow: hidden;
-}
-
-/* 主大廳進場動畫 */
-.hall-fade-enter-active {
-  transition: all 0.5s ease;
-}
-
-.hall-fade-enter-from {
-  opacity: 0;
-}
-
-.hall-fade-enter-to {
-  opacity: 1;
-}
+<style scoped>
+.app { min-height: 100vh; position: relative; }
 </style>
