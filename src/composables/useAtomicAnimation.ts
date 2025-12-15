@@ -5,7 +5,7 @@ export function useAtomicAnimation() {
   const isAnimating = ref(false)
   let tl: gsap.core.Timeline | null = null
 
-  function expandAnimation(core: HTMLElement, rings: HTMLElement[], electrons: HTMLElement[], beams: HTMLElement[], onComplete?: () => void) {
+  function expandAnimation(core: HTMLElement, rings: HTMLElement[], electrons: HTMLElement[], beams: HTMLElement[], onComplete?: () => void, customRadius: number = 140) {
     if (isAnimating.value) return
     isAnimating.value = true
     tl = gsap.timeline({ onComplete: () => { isAnimating.value = false; onComplete?.() } })
@@ -24,9 +24,9 @@ export function useAtomicAnimation() {
     })
 
     electrons.forEach((electron, i) => {
-      const angle = (electron.dataset.angle ? parseFloat(electron.dataset.angle) : i * 60) - 90
+      const angle = (electron.dataset.angle ? parseFloat(electron.dataset.angle) : i * 60) - 180
       const rad = angle * (Math.PI / 180)
-      const radius = 140
+      const radius = customRadius
       tl!.fromTo(electron,
         { x: 0, y: 0, scale: 0, opacity: 0, rotation: -180 },
         { x: Math.cos(rad) * radius, y: Math.sin(rad) * radius, scale: 1, opacity: 1, rotation: 0, duration: 0.5, ease: 'back.out(1.4)' },

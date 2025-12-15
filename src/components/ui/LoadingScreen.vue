@@ -3,22 +3,17 @@
     <div v-if="!isComplete" class="loading-screen">
       <!-- 背景網格 -->
       <div class="bg-grid"></div>
-      
+
       <!-- 掃描線 -->
       <div class="scanline"></div>
 
       <!-- 浮動粒子 -->
       <div class="particles">
-        <div
-          v-for="i in 20"
-          :key="i"
-          class="particle"
-          :style="{
-            left: `${Math.random() * 100}%`,
-            animationDelay: `${Math.random() * 5}s`,
-            animationDuration: `${6 + Math.random() * 4}s`
-          }"
-        ></div>
+        <div v-for="i in 20" :key="i" class="particle" :style="{
+          left: `${Math.random() * 100}%`,
+          animationDelay: `${Math.random() * 5}s`,
+          animationDuration: `${6 + Math.random() * 4}s`
+        }"></div>
       </div>
 
       <!-- 主要內容 -->
@@ -32,7 +27,7 @@
             <div class="reactor-core"></div>
             <div class="reactor-glow"></div>
           </div>
-          
+
           <!-- 環繞軌道 -->
           <div class="orbit orbit-1">
             <div class="orbit-dot"></div>
@@ -57,12 +52,8 @@
           <!-- 狀態訊息 -->
           <div class="status-messages">
             <TransitionGroup name="message-list">
-              <div
-                v-for="(message, index) in visibleMessages"
-                :key="message.id"
-                class="status-message"
-                :class="{ 'completed': message.completed }"
-              >
+              <div v-for="(message, index) in visibleMessages" :key="message.id" class="status-message"
+                :class="{ 'completed': message.completed }">
                 <span class="message-prefix">[{{ message.timestamp }}]</span>
                 <span class="message-text">{{ message.text }}</span>
                 <span v-if="message.completed" class="message-status">OK</span>
@@ -163,7 +154,7 @@ const simulateLoading = () => {
       Math.floor(elapsed / messageInterval),
       messages.length - 1
     )
-    
+
     if (newMessageIndex > currentMessageIndex.value) {
       // 標記前一個訊息為完成
       if (currentMessageIndex.value >= 0) {
@@ -185,7 +176,7 @@ const simulateLoading = () => {
     } else {
       // 標記最後一個訊息為完成
       messages[messages.length - 1].completed = true
-      
+
       // 延遲後完成載入
       setTimeout(() => {
         isComplete.value = true
@@ -235,7 +226,7 @@ $text-dim: rgba(255, 255, 255, 0.4);
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: 
+  background-image:
     linear-gradient(rgba(0, 212, 255, 0.03) 1px, transparent 1px),
     linear-gradient(90deg, rgba(0, 212, 255, 0.03) 1px, transparent 1px);
   background-size: 50px 50px;
@@ -243,8 +234,15 @@ $text-dim: rgba(255, 255, 255, 0.4);
 }
 
 @keyframes gridPulse {
-  0%, 100% { opacity: 0.5; }
-  50% { opacity: 1; }
+
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+
+  50% {
+    opacity: 1;
+  }
 }
 
 // 掃描線
@@ -254,10 +252,8 @@ $text-dim: rgba(255, 255, 255, 0.4);
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(
-    transparent 50%,
-    rgba(0, 212, 255, 0.02) 50%
-  );
+  background: linear-gradient(transparent 50%,
+      rgba(0, 212, 255, 0.02) 50%);
   background-size: 100% 4px;
   pointer-events: none;
 }
@@ -287,8 +283,15 @@ $text-dim: rgba(255, 255, 255, 0.4);
     transform: translateY(100vh) translateX(0);
     opacity: 0;
   }
-  10% { opacity: 1; }
-  90% { opacity: 1; }
+
+  10% {
+    opacity: 1;
+  }
+
+  90% {
+    opacity: 1;
+  }
+
   100% {
     transform: translateY(-10vh) translateX(50px);
     opacity: 0;
@@ -350,8 +353,13 @@ $text-dim: rgba(255, 255, 255, 0.4);
 }
 
 @keyframes ringRotate {
-  0% { transform: translate(-50%, -50%) rotate(0deg); }
-  100% { transform: translate(-50%, -50%) rotate(360deg); }
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+
+  100% {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
 }
 
 .reactor-core {
@@ -367,11 +375,14 @@ $text-dim: rgba(255, 255, 255, 0.4);
 }
 
 @keyframes corePulse {
-  0%, 100% { 
+
+  0%,
+  100% {
     transform: translate(-50%, -50%) scale(1);
     box-shadow: 0 0 30px $primary-cyan, 0 0 60px $primary-cyan;
   }
-  50% { 
+
+  50% {
     transform: translate(-50%, -50%) scale(1.1);
     box-shadow: 0 0 50px $primary-cyan, 0 0 100px $primary-cyan;
   }
@@ -389,8 +400,17 @@ $text-dim: rgba(255, 255, 255, 0.4);
 }
 
 @keyframes glowPulse {
-  0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
-  50% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
+
+  0%,
+  100% {
+    opacity: 0.5;
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.2);
+  }
 }
 
 // 軌道
@@ -424,8 +444,13 @@ $text-dim: rgba(255, 255, 255, 0.4);
 }
 
 @keyframes orbitSpin {
-  0% { transform: translate(-50%, -50%) rotate(0deg); }
-  100% { transform: translate(-50%, -50%) rotate(360deg); }
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+
+  100% {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
 }
 
 .orbit-dot {
@@ -480,11 +505,25 @@ $text-dim: rgba(255, 255, 255, 0.4);
 }
 
 @keyframes glitchText {
-  0% { transform: translateX(0); }
-  25% { transform: translateX(-5px); }
-  50% { transform: translateX(5px); }
-  75% { transform: translateX(-3px); }
-  100% { transform: translateX(0); }
+  0% {
+    transform: translateX(0);
+  }
+
+  25% {
+    transform: translateX(-5px);
+  }
+
+  50% {
+    transform: translateX(5px);
+  }
+
+  75% {
+    transform: translateX(-3px);
+  }
+
+  100% {
+    transform: translateX(0);
+  }
 }
 
 // 狀態訊息
@@ -532,8 +571,15 @@ $text-dim: rgba(255, 255, 255, 0.4);
 }
 
 @keyframes loadingBlink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.3; }
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.3;
+  }
 }
 
 // 訊息列表動畫
@@ -627,8 +673,15 @@ $text-dim: rgba(255, 255, 255, 0.4);
 }
 
 @keyframes statusPulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.6; }
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.6;
+  }
 }
 
 // 角落裝飾
@@ -674,13 +727,11 @@ $text-dim: rgba(255, 255, 255, 0.4);
   top: 0;
   width: 1px;
   height: 100%;
-  background: linear-gradient(
-    180deg,
-    transparent 0%,
-    $primary-cyan 20%,
-    $primary-cyan 80%,
-    transparent 100%
-  );
+  background: linear-gradient(180deg,
+      transparent 0%,
+      $primary-cyan 20%,
+      $primary-cyan 80%,
+      transparent 100%);
   opacity: 0.3;
 
   &.left {
@@ -709,8 +760,13 @@ $text-dim: rgba(255, 255, 255, 0.4);
 }
 
 @keyframes dataFlow {
-  0% { top: -20px; }
-  100% { top: 100%; }
+  0% {
+    top: -20px;
+  }
+
+  100% {
+    top: 100%;
+  }
 }
 
 // 過渡動畫
