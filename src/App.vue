@@ -1,10 +1,17 @@
 <script setup lang="ts">
 import { useUIStore } from '@/stores/uiStore'
+import { useContentStore } from '@/stores/contentStore'
 import AnimatedBackground from '@/components/ui/AnimatedBackground.vue'
 import LoadingScreen from '@/components/ui/LoadingScreen.vue'
 import MainLayout from '@/components/layout/MainLayout.vue'
+import { onMounted } from 'vue'
 
 const uiStore = useUIStore()
+const contentStore = useContentStore()
+
+onMounted(() => {
+  contentStore.fetchContent()
+})
 </script>
 
 <template>
