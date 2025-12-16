@@ -486,9 +486,16 @@ function setActive(id: string) {
 .tech-specs {
     font-family: 'Share Tech Mono', monospace;
     font-size: 0.8rem;
-    color: rgba(255, 255, 255, 0.4);
     border-top: 1px solid rgba(255, 255, 255, 0.1);
     padding-top: 20px;
+
+    /* Cyan-Blue Neon Gradient Text */
+    background: linear-gradient(180deg, #00f5ff 0%, #00aaff 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    font-weight: 500;
 }
 
 .spec-row {
@@ -498,6 +505,7 @@ function setActive(id: string) {
 }
 
 .label {
-    color: rgba(0, 212, 255, 0.6);
+    /* Inherit gradient from parent */
+    color: inherit;
 }
 </style>
