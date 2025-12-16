@@ -103,7 +103,7 @@ function randomizeEffect() {
     max-width: 200px;
     width: 50%;
     height: 11px;
-    z-index: 999;
+    z-index: 10;
 }
 
 .gold-trapezoid-top {

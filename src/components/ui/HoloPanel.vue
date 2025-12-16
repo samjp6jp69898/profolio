@@ -27,128 +27,128 @@ onUnmounted(() => window.removeEventListener('keydown', handleKeydown))
 </script>
 
 <template>
-    <Teleport to="body">
-        <transition name="holo-fade">
-            <div v-if="modelValue" class="holo-panel-overlay" @click.self="close">
-                <div class="holo-panel-container">
 
-                    <!-- Integrated Top Tab & Close Button -->
-                    <div class="top-tab-structure">
-                        <div class="tab-shape"></div>
-                        <button class="close-btn" @click="close">
-                            <span class="btn-text">CLOSE</span>
-                            <div class="btn-icon">
-                                <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                                    <path d="M1 1L11 11M11 1L1 11" stroke="currentColor" stroke-width="2" />
-                                </svg>
+    <transition name="holo-fade">
+        <div v-if="modelValue" class="holo-panel-overlay" @click.self="close">
+            <div class="holo-panel-container">
+
+                <!-- Integrated Top Tab & Close Button -->
+                <div class="top-tab-structure">
+                    <div class="tab-shape"></div>
+                    <button class="close-btn" @click="close">
+                        <span class="btn-text">CLOSE</span>
+                        <div class="btn-icon">
+                            <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                                <path d="M1 1L11 11M11 1L1 11" stroke="currentColor" stroke-width="2" />
+                            </svg>
+                        </div>
+                    </button>
+                </div>
+
+                <!-- Complex Tech Frame -->
+                <div class="frame-layer">
+                    <!-- Top Left Complex -->
+                    <svg class="tech-corner tl" width="200" height="200" viewBox="0 0 200 200" fill="none">
+                        <!-- Outer Chamfered Frame -->
+                        <path d="M 2 100 V 40 L 40 2 H 180" class="frame-primary" />
+                        <!-- Inner Parallel Lines -->
+                        <path d="M 12 180 V 45 L 45 12 H 160" class="frame-secondary" />
+                        <path d="M 22 180 V 50 L 50 22 H 140" class="frame-tertiary" />
+                        <!-- Decorative Nodes -->
+                        <rect x="0" y="38" width="4" height="4" class="node-fill" />
+                        <rect x="38" y="0" width="4" height="4" class="node-fill" />
+                        <!-- Diagonal Detail -->
+                        <path d="M 30 60 L 60 30" class="detail-line" />
+                        <circle cx="30" cy="60" r="1.5" class="node-fill" />
+                        <circle cx="60" cy="30" r="1.5" class="node-fill" />
+                    </svg>
+
+                    <!-- Top Right Complex -->
+                    <svg class="tech-corner tr" width="200" height="200" viewBox="0 0 200 200" fill="none">
+                        <path d="M 20 2 H 160 L 198 40 V 100" class="frame-primary" />
+                        <path d="M 40 12 H 155 L 188 45 V 180" class="frame-secondary" />
+                        <rect x="196" y="38" width="4" height="4" class="node-fill" />
+                        <!-- Header connection decorative block -->
+                        <rect x="80" y="0" width="60" height="6" class="deco-block" opacity="0.3" />
+                        <rect x="80" y="8" width="60" height="2" class="deco-block" opacity="0.5" />
+                    </svg>
+
+                    <!-- Bottom Right Complex -->
+                    <svg class="tech-corner br" width="200" height="200" viewBox="0 0 200 200" fill="none">
+                        <!-- Outer Frame with Notch -->
+                        <path d="M 198 100 V 160 L 160 198 H 100" class="frame-primary" />
+                        <path d="M 188 20 V 155 L 155 188 H 40" class="frame-secondary" />
+                        <path d="M 178 20 V 150 L 150 178 H 60" class="frame-tertiary" />
+                        <rect x="196" y="158" width="4" height="4" class="node-fill" />
+                        <rect x="158" y="196" width="4" height="4" class="node-fill" />
+                    </svg>
+
+                    <!-- Bottom Left Complex -->
+                    <svg class="tech-corner bl" width="200" height="200" viewBox="0 0 200 200" fill="none">
+                        <path d="M 100 198 H 40 L 2 160 V 100" class="frame-primary" />
+                        <path d="M 160 188 H 45 L 12 155 V 20" class="frame-secondary" />
+                        <rect x="0" y="158" width="4" height="4" class="node-fill" />
+                        <rect x="38" y="196" width="4" height="4" class="node-fill" />
+                        <!-- Corner Deco -->
+                        <path d="M 15 140 L 25 150 H 50" class="detail-line" />
+                    </svg>
+
+                    <!-- Center Borders (Absolute Rects for cleanliness) -->
+                    <div class="border-h top"></div>
+                    <div class="border-h bottom"></div>
+                    <div class="border-v left"></div>
+                    <div class="border-v right"></div>
+                </div>
+
+                <!-- Inner Content Mask -->
+                <div class="panel-inner-mask" v-if="panelItem">
+                    <div class="panel-bg"></div>
+                    <div class="scan-line-vertical"></div>
+
+                    <div class="panel-header">
+                        <div class="title-group">
+                            <div class="title-overline">PROJECT IDENTITY</div>
+                            <h2 class="panel-title">{{ panelItem.title }}</h2>
+                        </div>
+                        <div class="header-decoration">
+                            <div class="status-block">
+                                <div class="label">SYSTEM STATUS</div>
+                                <div class="value">ONLINE</div>
                             </div>
-                        </button>
+                            <div class="status-indicator"></div>
+                        </div>
                     </div>
 
-                    <!-- Complex Tech Frame -->
-                    <div class="frame-layer">
-                        <!-- Top Left Complex -->
-                        <svg class="tech-corner tl" width="200" height="200" viewBox="0 0 200 200" fill="none">
-                            <!-- Outer Chamfered Frame -->
-                            <path d="M 2 100 V 40 L 40 2 H 180" class="frame-primary" />
-                            <!-- Inner Parallel Lines -->
-                            <path d="M 12 180 V 45 L 45 12 H 160" class="frame-secondary" />
-                            <path d="M 22 180 V 50 L 50 22 H 140" class="frame-tertiary" />
-                            <!-- Decorative Nodes -->
-                            <rect x="0" y="38" width="4" height="4" class="node-fill" />
-                            <rect x="38" y="0" width="4" height="4" class="node-fill" />
-                            <!-- Diagonal Detail -->
-                            <path d="M 30 60 L 60 30" class="detail-line" />
-                            <circle cx="30" cy="60" r="1.5" class="node-fill" />
-                            <circle cx="60" cy="30" r="1.5" class="node-fill" />
-                        </svg>
-
-                        <!-- Top Right Complex -->
-                        <svg class="tech-corner tr" width="200" height="200" viewBox="0 0 200 200" fill="none">
-                            <path d="M 20 2 H 160 L 198 40 V 100" class="frame-primary" />
-                            <path d="M 40 12 H 155 L 188 45 V 180" class="frame-secondary" />
-                            <rect x="196" y="38" width="4" height="4" class="node-fill" />
-                            <!-- Header connection decorative block -->
-                            <rect x="80" y="0" width="60" height="6" class="deco-block" opacity="0.3" />
-                            <rect x="80" y="8" width="60" height="2" class="deco-block" opacity="0.5" />
-                        </svg>
-
-                        <!-- Bottom Right Complex -->
-                        <svg class="tech-corner br" width="200" height="200" viewBox="0 0 200 200" fill="none">
-                            <!-- Outer Frame with Notch -->
-                            <path d="M 198 100 V 160 L 160 198 H 100" class="frame-primary" />
-                            <path d="M 188 20 V 155 L 155 188 H 40" class="frame-secondary" />
-                            <path d="M 178 20 V 150 L 150 178 H 60" class="frame-tertiary" />
-                            <rect x="196" y="158" width="4" height="4" class="node-fill" />
-                            <rect x="158" y="196" width="4" height="4" class="node-fill" />
-                        </svg>
-
-                        <!-- Bottom Left Complex -->
-                        <svg class="tech-corner bl" width="200" height="200" viewBox="0 0 200 200" fill="none">
-                            <path d="M 100 198 H 40 L 2 160 V 100" class="frame-primary" />
-                            <path d="M 160 188 H 45 L 12 155 V 20" class="frame-secondary" />
-                            <rect x="0" y="158" width="4" height="4" class="node-fill" />
-                            <rect x="38" y="196" width="4" height="4" class="node-fill" />
-                            <!-- Corner Deco -->
-                            <path d="M 15 140 L 25 150 H 50" class="detail-line" />
-                        </svg>
-
-                        <!-- Center Borders (Absolute Rects for cleanliness) -->
-                        <div class="border-h top"></div>
-                        <div class="border-h bottom"></div>
-                        <div class="border-v left"></div>
-                        <div class="border-v right"></div>
+                    <div class="divider-line">
+                        <div class="line-segment"></div>
+                        <div class="line-marker"></div>
+                        <div class="line-segment"></div>
                     </div>
 
-                    <!-- Inner Content Mask -->
-                    <div class="panel-inner-mask" v-if="panelItem">
-                        <div class="panel-bg"></div>
-                        <div class="scan-line-vertical"></div>
+                    <div v-if="panelItem.tags && panelItem.tags.length" class="panel-tags">
+                        <span v-for="tag in panelItem.tags" :key="tag" class="panel-tag">{{ tag }}</span>
+                    </div>
 
-                        <div class="panel-header">
-                            <div class="title-group">
-                                <div class="title-overline">PROJECT IDENTITY</div>
-                                <h2 class="panel-title">{{ panelItem.title }}</h2>
-                            </div>
-                            <div class="header-decoration">
-                                <div class="status-block">
-                                    <div class="label">SYSTEM STATUS</div>
-                                    <div class="value">ONLINE</div>
-                                </div>
-                                <div class="status-indicator"></div>
-                            </div>
+                    <div class="panel-content scrollbar-hide">
+                        <p class="summary-text">{{ panelItem.summary }}</p>
+                        <div class="full-content" v-html="panelItem.content || 'ACCESS RESTRICTED: CONTENT PENDING'">
                         </div>
+                    </div>
 
-                        <div class="divider-line">
-                            <div class="line-segment"></div>
-                            <div class="line-marker"></div>
-                            <div class="line-segment"></div>
-                        </div>
-
-                        <div v-if="panelItem.tags && panelItem.tags.length" class="panel-tags">
-                            <span v-for="tag in panelItem.tags" :key="tag" class="panel-tag">{{ tag }}</span>
-                        </div>
-
-                        <div class="panel-content scrollbar-hide">
-                            <p class="summary-text">{{ panelItem.summary }}</p>
-                            <div class="full-content"
-                                v-html="panelItem.content || 'ACCESS RESTRICTED: CONTENT PENDING'"></div>
-                        </div>
-
-                        <div class="panel-footer-deco">
-                            <div class="deco-id">LAST UPDATE: {{ new Date(panelItem.updated_at).toLocaleDateString() ||
-                                'N/A' }}</div>
-                            <div class="footer-bars">
-                                <div class="bar"></div>
-                                <div class="bar"></div>
-                                <div class="bar"></div>
-                            </div>
+                    <div class="panel-footer-deco">
+                        <div class="deco-id">LAST UPDATE: {{ new Date(panelItem.updated_at).toLocaleDateString() ||
+                            'N/A' }}</div>
+                        <div class="footer-bars">
+                            <div class="bar"></div>
+                            <div class="bar"></div>
+                            <div class="bar"></div>
                         </div>
                     </div>
                 </div>
             </div>
-        </transition>
-    </Teleport>
+        </div>
+    </transition>
+
 </template>
 
 <style scoped>
@@ -197,7 +197,7 @@ onUnmounted(() => window.removeEventListener('keydown', handleKeydown))
 
 /* Layout */
 .holo-panel-overlay {
-    position: fixed;
+    position: absolute;
     inset: 0;
     background: rgba(3, 5, 8, 0.9);
     backdrop-filter: blur(10px);
@@ -211,7 +211,7 @@ onUnmounted(() => window.removeEventListener('keydown', handleKeydown))
 .holo-panel-container {
     position: relative;
     width: 100%;
-    max-width: 900px;
+    max-width: 1400px;
     height: 85vh;
     display: flex;
     flex-direction: column;
@@ -346,6 +346,7 @@ onUnmounted(() => window.removeEventListener('keydown', handleKeydown))
 .close-btn:hover {
     background: rgba(0, 212, 255, 0.15);
     padding-right: 30px;
+    cursor: pointer;
 }
 
 .btn-text {
