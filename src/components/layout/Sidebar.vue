@@ -4,19 +4,42 @@ import { ref, onMounted, onUnmounted } from 'vue'
 
 const uiStore = useUIStore()
 const cpuUsage = ref(4)
+const userNameRef = ref<HTMLElement | null>(null)
 let intervalId: number
+let shakeIntervalId: number
+let shakeTimeoutId: number
 
 function updateCpuUsage() {
     // Randomize CPU usage between 2% and 8%
     cpuUsage.value = Math.floor(Math.random() * (8 - 2 + 1) + 2)
 }
 
+function triggerShake() {
+    if (userNameRef.value) {
+        userNameRef.value.style.animationPlayState = 'running, running'
+
+        shakeTimeoutId = window.setTimeout(() => {
+            if (userNameRef.value) {
+                userNameRef.value.style.animationPlayState = 'running, paused'
+            }
+        }, 400)
+    }
+}
+
 onMounted(() => {
     intervalId = window.setInterval(updateCpuUsage, 2000)
+
+    // Initial delay then start shake interval
+    shakeTimeoutId = window.setTimeout(() => {
+        triggerShake()
+        shakeIntervalId = window.setInterval(triggerShake, 3000)
+    }, 1500)
 })
 
 onUnmounted(() => {
     clearInterval(intervalId)
+    clearInterval(shakeIntervalId)
+    clearTimeout(shakeTimeoutId)
 })
 
 const items = [
@@ -43,7 +66,7 @@ function setActive(id: string) {
                     <div class="core"></div>
                 </div>
             </div>
-            <h1 class="user-name">SAM</h1>
+            <h1 class="user-name" ref="userNameRef">SAM</h1>
         </div>
 
         <!-- Navigation -->
@@ -136,10 +159,121 @@ function setActive(id: string) {
 .user-name {
     margin-top: 20px;
     font-family: 'Orbitron', sans-serif;
-    font-size: 2rem;
-    color: var(--primary-cyan, #00d4ff);
-    letter-spacing: 4px;
-    text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+    font-size: 3.5rem;
+    font-weight: 900;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    position: relative;
+    display: inline-block;
+    z-index: 10;
+
+    /* Metallic Gradient - Cyan/Steel Style */
+    background: linear-gradient(180deg,
+            #062c38 0%,
+            /* Dark Deep Cyan */
+            #0e7490 20%,
+            /* Dark Cyan */
+            #22d3ee 48%,
+            /* Bright Cyan */
+            #aadbfc 50%,
+            /* White Highlight (Horizon) */
+            #22d3ee 52%,
+            /* Bright Cyan */
+            #0e7490 80%,
+            /* Dark Cyan */
+            #062c38 100%
+            /* Dark Deep Cyan */
+        );
+
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+    /* Chrome/Metal Stroke Effect */
+    -webkit-text-stroke: 1.5px rgba(156, 212, 255, 0.8);
+    /* #ffe082 HoloCard Gold */
+
+    /* Metallic Shine & Glow */
+    filter:
+        drop-shadow(0 2px 0px rgba(0, 0, 0, 0.5))
+        /* Hard shadow for depth */
+        drop-shadow(0 0 10px rgba(8, 145, 178, 0.4))
+        /* Soft cyan glow reduced */
+        drop-shadow(0 0 15px rgba(255, 215, 0, 0.2));
+    /* Faint gold ambient glow */
+
+    /* Animated Metal Sheen */
+    animation: metalSheen 6s linear infinite;
+}
+
+/* Reflection Effect */
+.user-name::after {
+    content: 'SAM';
+    position: absolute;
+    left: 0;
+    top: 90%;
+    /* Slight overlap for better reflection connection */
+    width: 100%;
+    height: 100%;
+
+    /* Faded reflection gradient */
+    background: linear-gradient(180deg,
+            rgba(34, 211, 238, 0.25) 0%,
+            rgba(8, 145, 178, 0.1) 40%,
+            transparent 80%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+    transform: scaleY(-0.6) perspective(500px) rotateX(20deg);
+    transform-origin: top;
+    filter: blur(2px);
+    opacity: 0.5;
+    pointer-events: none;
+    z-index: -1;
+}
+
+@keyframes metalSheen {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    100% {
+        background-position: 200% 50%;
+    }
+}
+
+/* Soft Glow Pulse - Refined for sharpness */
+@keyframes glowPulse {
+
+    0%,
+    100% {
+        filter:
+            drop-shadow(0 0 2px rgba(0, 217, 255, 0.9)) drop-shadow(0 0 5px rgba(0, 217, 255, 0.6)) drop-shadow(0 0 12px rgba(0, 217, 255, 0.4));
+    }
+
+    50% {
+        filter:
+            drop-shadow(0 0 3px rgba(180, 245, 255, 0.9)) drop-shadow(0 0 8px rgba(0, 217, 255, 0.7)) drop-shadow(0 0 18px rgba(0, 217, 255, 0.5));
+    }
+}
+
+/* Left-Right Shake Effect */
+@keyframes shake {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-1px);
+    }
+
+    75% {
+        transform: translateX(1px);
+    }
 }
 
 .nav-menu {
