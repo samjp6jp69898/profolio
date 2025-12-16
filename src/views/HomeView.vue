@@ -11,9 +11,8 @@ const { home } = storeToRefs(store)
 <template>
     <ContentLayout title="MISSION DASHBOARD">
         <div class="home-list">
-            <HoloCard v-for="item in home" :key="item.id" :title="item.title" :tags="item.tags" :date="item.date"
-                class="home-card">
-                <p>{{ item.description }}</p>
+            <HoloCard v-for="item in home" :key="item.id" :item="item">
+                <p>{{ item.summary }}</p>
             </HoloCard>
         </div>
     </ContentLayout>

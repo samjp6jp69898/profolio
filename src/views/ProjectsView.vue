@@ -2,18 +2,24 @@
 import ContentLayout from '@/components/layout/ContentLayout.vue'
 import HoloCard from '@/components/ui/HoloCard.vue'
 import { useContentStore } from '@/stores/contentStore'
+import { useUIStore } from '@/stores/uiStore'
 import { storeToRefs } from 'pinia'
+import type { PanelItem } from '@/types'
 
 const store = useContentStore()
+const uiStore = useUIStore()
 const { projects } = storeToRefs(store)
+
+const openProject = (project: PanelItem) => {
+    uiStore.openDetail(project)
+}
 </script>
 
 <template>
     <ContentLayout title="PROJECT BLUEPRINTS">
         <div class="projects-grid">
-            <HoloCard v-for="project in projects" :key="project.id" :title="project.title" :tags="project.tags"
-                :date="project.date" class="project-card">
-                <p>{{ project.description }}</p>
+            <HoloCard v-for="project in projects" :key="project.id" :item="project" @click="openProject(project)">
+                <p>{{ project.summary }}</p>
             </HoloCard>
         </div>
     </ContentLayout>
@@ -31,5 +37,9 @@ p {
     color: rgba(255, 255, 255, 0.7);
     font-family: 'Rajdhani', sans-serif;
     margin: 0;
+}
+
+.project-card {
+    cursor: pointer;
 }
 </style>

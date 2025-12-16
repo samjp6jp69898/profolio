@@ -6,9 +6,12 @@ import HomeView from '@/views/HomeView.vue'
 import ArticlesView from '@/views/ArticlesView.vue'
 import ProjectsView from '@/views/ProjectsView.vue'
 import AboutView from '@/views/AboutView.vue'
+import HoloPanel from '@/components/ui/HoloPanel.vue'
 import { computed } from 'vue'
+import { storeToRefs } from 'pinia'
 
 const uiStore = useUIStore()
+const { showDetailPanel, selectedDetailItem } = storeToRefs(uiStore)
 
 const currentView = computed(() => {
     switch (uiStore.activePanel) {
@@ -19,6 +22,10 @@ const currentView = computed(() => {
         default: return HomeView
     }
 })
+
+const handlePanelUpdate = (val: boolean) => {
+    if (!val) uiStore.closeDetail()
+}
 </script>
 
 <template>
@@ -30,6 +37,10 @@ const currentView = computed(() => {
             <main class="main-content">
                 <component :is="currentView" />
             </main>
+
+            <!-- Global Detail Panel -->
+            <HoloPanel :model-value="showDetailPanel" @update:model-value="handlePanelUpdate"
+                :panelItem="selectedDetailItem" />
         </div>
     </div>
 </template>

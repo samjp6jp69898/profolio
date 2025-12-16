@@ -1,12 +1,12 @@
 import { defineStore } from 'pinia';
-import type { ContentItem } from '@/types';
+import type { PanelItem } from '@/types';
 import { supabase } from '@/lib/supabase';
 
 export const useContentStore = defineStore('content', {
     state: () => ({
-        projects: [] as ContentItem[],
-        articles: [] as ContentItem[],
-        home: [] as ContentItem[],
+        projects: [] as PanelItem[],
+        articles: [] as PanelItem[],
+        home: [] as PanelItem[],
         loading: false,
         error: null as string | null,
     }),
@@ -29,32 +29,20 @@ export const useContentStore = defineStore('content', {
             this.loading = true;
             this.error = null;
             try {
-                // Fetch Projects
-                const { data: projectsData, error: projectsError } = await supabase
-                    .from('projects')
+                // Fetch All Content
+                const { data, error } = await supabase
+                    .from('contents')
                     .select('*')
                     .order('date', { ascending: false });
 
-                if (projectsError) throw projectsError;
-                if (projectsData) this.projects = projectsData;
+                if (error) throw error;
 
-                // Fetch Articles
-                const { data: articlesData, error: articlesError } = await supabase
-                    .from('articles')
-                    .select('*')
-                    .order('date', { ascending: false });
-
-                if (articlesError) throw articlesError;
-                if (articlesData) this.articles = articlesData;
-
-                // Fetch Home Updates
-                const { data: homeData, error: homeError } = await supabase
-                    .from('home')
-                    .select('*')
-                    .order('updated_at', { ascending: false });
-
-                if (homeError) throw homeError;
-                if (homeData) this.home = homeData;
+                if (data) {
+                    this.projects = data.filter((item: PanelItem) => item.category === 'project');
+                    this.articles = data.filter((item: PanelItem) => item.category === 'article');
+                    this.home = data.filter((item: PanelItem) => item.category === 'home')
+                        .sort((a: any, b: any) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime());
+                }
 
             } catch (err: any) {
                 console.error('Error fetching content:', err);

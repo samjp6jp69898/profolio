@@ -29,6 +29,8 @@ const items = [
 function setActive(id: string) {
     // mapping old flow to new: we treat panelId as the view id
     uiStore.openPanel(id)
+    // close holo panel
+    uiStore.closeDetail()
 }
 </script>
 
