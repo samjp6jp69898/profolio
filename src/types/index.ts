@@ -3,7 +3,7 @@ export interface PanelItem {
     title: string;
     summary: string;
     content?: string | null;
-    category: 'project' | 'article' | 'home';
+    category: 'project' | 'article' | 'home' | 'about';
     tags: string[];
     link: string; // For the arrow action
     status: 'completed' | 'in-progress' | 'archived';

@@ -49,10 +49,13 @@ const handlePanelUpdate = (val: boolean) => {
 .main-layout {
     display: flex;
     min-height: 100vh;
+    width: 100%;
+    box-sizing: border-box;
     /* Background style handled by global app or AnimatedBackground */
 }
 
 .content-wrapper {
+    width: 100%;
     margin-left: 280px;
     /* Sidebar width */
     flex: 1;
@@ -63,7 +66,9 @@ const handlePanelUpdate = (val: boolean) => {
 }
 
 .main-content {
+    width: 100%;
     flex: 1;
+    overflow-x: hidden;
     padding: 20px;
     overflow-y: auto;
 }

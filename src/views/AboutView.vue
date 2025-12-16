@@ -1,13 +1,24 @@
 <script setup lang="ts">
 import ContentLayout from '@/components/layout/ContentLayout.vue'
 import HoloCard from '@/components/ui/HoloCard.vue'
+import { PanelItem } from '@/types';
+
+const panelItem: PanelItem = {
+    id: 'about',
+    title: 'About',
+    summary: 'About summary',
+    content: 'About content',
+    tags: ['CLEARANCE L10', 'ADMIN'],
+    updated_at: '2024-12-15',
+    status: 'completed',
+    category: 'about',
+}
 </script>
 
 <template>
     <ContentLayout title="PERSONNEL FILE">
         <div class="about-container">
-            <HoloCard title="IDENTITY CONFIRMED" :tags="['CLEARANCE L10', 'ADMIN']" date="2024-12-15"
-                class="profile-card">
+            <HoloCard :item="panelItem" class="profile-card">
                 <div class="profile-grid">
                     <div class="profile-item">
                         <span class="label">SUBJECT</span>

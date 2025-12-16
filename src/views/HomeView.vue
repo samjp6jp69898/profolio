@@ -23,7 +23,6 @@ const { home } = storeToRefs(store)
     display: flex;
     flex-direction: column;
     gap: 20px;
-    width: 100%;
 }
 
 p {

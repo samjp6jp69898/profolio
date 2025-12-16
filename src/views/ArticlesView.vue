@@ -30,7 +30,6 @@ const openArticle = (article: PanelItem) => {
     display: flex;
     flex-direction: column;
     gap: 20px;
-    width: 100%;
 }
 
 p {

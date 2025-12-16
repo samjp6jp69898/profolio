@@ -17,7 +17,8 @@ defineProps<{
 .view-container {
     padding: 20px;
     animation: fadeIn 0.5s ease-out;
-    width: 100%;
+    flex: 1;
+    overflow: hidden;
 }
 
 .section-title {
@@ -36,7 +37,6 @@ defineProps<{
     display: flex;
     flex-direction: column;
     gap: 20px;
-    width: 100%;
 }
 
 @keyframes fadeIn {
