@@ -33,7 +33,7 @@ export const useContentStore = defineStore('content', {
                 const { data, error } = await supabase
                     .from('contents')
                     .select('*')
-                    .order('date', { ascending: false });
+                    .order('updated_at', { ascending: false });
 
                 if (error) throw error;
 
