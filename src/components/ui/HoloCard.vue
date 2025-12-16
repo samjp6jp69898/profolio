@@ -429,12 +429,12 @@ function randomizeEffect() {
 
 /* Gold Trapezoid Effects */
 .card-container:hover .gold-trapezoid {
-    filter: brightness(1.3) drop-shadow(0 0 5px rgba(255, 215, 0, 0.5));
+    filter: brightness(1.1) drop-shadow(0 0 5px rgba(255, 215, 0, 0.5));
     transition: filter 0.3s ease;
 }
 
 .card-container.flow-turbo:hover .gold-trapezoid {
-    filter: brightness(1.5) drop-shadow(0 0 10px rgba(255, 200, 0, 0.8));
+    filter: brightness(1.1) drop-shadow(0 0 10px rgba(255, 200, 0, 0.8));
 }
 
 @keyframes cyanInnerGlow {
