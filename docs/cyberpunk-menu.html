@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyberpunk Navigation Menu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --cyan-neon: #00f5ff;
+            --cyan-glow: rgba(0, 245, 255, 0.5);
+            --cyan-border-inactive: rgba(0, 245, 255, 0.35);
+            --dark-gold: #5c4b16;
+            --bg-dark: #0a0a12;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: var(--bg-dark);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Orbitron', monospace;
+        }
+
+        .nav-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding: 40px 40px 40px 60px;
+        }
+
+        /* Base Menu Item */
+        .menu-item {
+            position: relative;
+            width: 280px;
+            height: 52px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: rgba(10, 15, 25, 0.8);
+        }
+
+        /* ========== GOLD BAR (shared) - Outside left border ========== */
+        .gold-bar {
+            position: absolute;
+            left: -8px; /* Outside the left border */
+            top: 4px;
+            bottom: 4px;
+            width: 3px;
+            background: linear-gradient(180deg,
+                #3e3310 0%,
+                #5c4b16 8%,
+                #7a6420 16%,
+                #a07d2a 26%,
+                #c89a33 36%,
+                #f2e6b5 48%,
+                #fff6d8 50%,
+                #f2e6b5 52%,
+                #c89a33 64%,
+                #a07d2a 74%,
+                #7a6420 84%,
+                #5c4b16 92%,
+                #3e3310 100%);
+        }
+
+        /* Active item gold bar with brightness 1.2 */
+        .menu-item.active .gold-bar {
+            filter: brightness(1.2);
+        }
+
+        /* ========== INACTIVE ITEM ========== */
+        
+        .menu-item.inactive .border-svg {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .menu-item.inactive .text {
+            color: rgba(200, 200, 210, 0.85);
+            font-size: 15px;
+            font-weight: 700;
+            letter-spacing: 3px;
+        }
+
+        /* Dark Gold Triangle - Bottom Right Corner */
+        .corner-triangle {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 0 0 16px 16px;
+            border-color: transparent transparent var(--dark-gold) transparent;
+        }
+
+        /* ========== ACTIVE ITEM ========== */
+        .menu-item.active {
+            background: 
+                linear-gradient(180deg,
+                    rgba(0, 245, 255, 0.12) 0%,
+                    rgba(0, 180, 200, 0.06) 50%,
+                    rgba(0, 245, 255, 0.12) 100%);
+        }
+
+        .menu-item.active .border-svg {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            filter: drop-shadow(0 0 4px var(--cyan-neon)) 
+                    drop-shadow(0 0 8px var(--cyan-glow));
+        }
+
+        /* Cyan Triangle - Left Side (Active) */
+        .triangle-left {
+            position: absolute;
+            left: -24px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 10px 0 10px 12px;
+            border-color: transparent transparent transparent var(--cyan-neon);
+            filter: drop-shadow(0 0 6px var(--cyan-neon)) 
+                    drop-shadow(0 0 10px var(--cyan-glow));
+            animation: trianglePulse 2s ease-in-out infinite;
+        }
+
+        .menu-item.active .text {
+            color: var(--cyan-neon);
+            font-size: 15px;
+            font-weight: 900;
+            letter-spacing: 4px;
+            text-shadow: 
+                0 0 8px var(--cyan-glow),
+                0 0 15px var(--cyan-glow);
+        }
+
+        @keyframes trianglePulse {
+            0%, 100% { 
+                filter: drop-shadow(0 0 6px var(--cyan-neon)) 
+                        drop-shadow(0 0 10px var(--cyan-glow));
+            }
+            50% { 
+                filter: drop-shadow(0 0 10px var(--cyan-neon)) 
+                        drop-shadow(0 0 18px var(--cyan-glow));
+            }
+        }
+
+        .menu-item.active .border-svg {
+            animation: borderGlow 2s ease-in-out infinite;
+        }
+
+        @keyframes borderGlow {
+            0%, 100% {
+                filter: drop-shadow(0 0 4px var(--cyan-neon)) 
+                        drop-shadow(0 0 8px var(--cyan-glow));
+            }
+            50% {
+                filter: drop-shadow(0 0 6px var(--cyan-neon)) 
+                        drop-shadow(0 0 12px var(--cyan-glow))
+                        drop-shadow(0 0 20px rgba(0, 245, 255, 0.3));
+            }
+        }
+
+        /* Hover Effects for Inactive */
+        .menu-item.inactive:hover .border-path {
+            stroke: rgba(0, 245, 255, 0.5);
+        }
+
+        .menu-item.inactive:hover .text {
+            color: rgba(230, 230, 240, 0.95);
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav-container">
+        <!-- Active Item -->
+        <div class="menu-item active">
+            <svg class="border-svg" viewBox="0 0 280 52" preserveAspectRatio="none">
+                <path class="border-path" 
+                      d="M 1 1 
+                         L 279 1 
+                         L 279 34 
+                         L 261 51 
+                         L 1 51 
+                         Z" 
+                      fill="none" 
+                      stroke="var(--cyan-neon)" 
+                      stroke-width="2"/>
+            </svg>
+            <div class="gold-bar"></div>
+            <div class="triangle-left"></div>
+            <span class="text">HOME</span>
+            <div class="corner-triangle"></div>
+        </div>
+
+        <!-- Inactive Items -->
+        <div class="menu-item inactive">
+            <svg class="border-svg" viewBox="0 0 280 52" preserveAspectRatio="none">
+                <path class="border-path"
+                      d="M 1 1 
+                         L 279 1 
+                         L 279 34 
+                         L 261 51 
+                         L 1 51 
+                         Z" 
+                      fill="none" 
+                      stroke="var(--cyan-border-inactive)" 
+                      stroke-width="2"/>
+            </svg>
+            <div class="gold-bar"></div>
+            <span class="text">ARTICLES</span>
+            <div class="corner-triangle"></div>
+        </div>
+
+        <div class="menu-item inactive">
+            <svg class="border-svg" viewBox="0 0 280 52" preserveAspectRatio="none">
+                <path class="border-path"
+                      d="M 1 1 
+                         L 279 1 
+                         L 279 34 
+                         L 261 51 
+                         L 1 51 
+                         Z" 
+                      fill="none" 
+                      stroke="var(--cyan-border-inactive)" 
+                      stroke-width="2"/>
+            </svg>
+            <div class="gold-bar"></div>
+            <span class="text">PROJECTS</span>
+            <div class="corner-triangle"></div>
+        </div>
+
+        <div class="menu-item inactive">
+            <svg class="border-svg" viewBox="0 0 280 52" preserveAspectRatio="none">
+                <path class="border-path"
+                      d="M 1 1 
+                         L 279 1 
+                         L 279 34 
+                         L 261 51 
+                         L 1 51 
+                         Z" 
+                      fill="none" 
+                      stroke="var(--cyan-border-inactive)" 
+                      stroke-width="2"/>
+            </svg>
+            <div class="gold-bar"></div>
+            <span class="text">ABOUT</span>
+            <div class="corner-triangle"></div>
+        </div>
+    </nav>
+</body>
+</html>

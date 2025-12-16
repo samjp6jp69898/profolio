@@ -74,9 +74,23 @@ function setActive(id: string) {
             <div v-for="item in items" :key="item.id" class="nav-item"
                 :class="{ active: uiStore.activePanel === item.id || (item.id === 'dashboard' && !uiStore.activePanel) }"
                 @click="setActive(item.id)">
-                <span class="nav-indicator">▶</span>
+
+                <svg class="border-svg" viewBox="0 0 280 52" preserveAspectRatio="none">
+                    <path class="border-path" d="M 1 1 
+                             L 279 1 
+                             L 280 39 
+                             L 262 51 
+                             L 1 51 
+                             Z" fill="none" stroke-width="2" />
+                </svg>
+
+                <div class="gold-bar"></div>
+                <!-- <div class="triangle-left"
+                    v-if="uiStore.activePanel === item.id || (item.id === 'dashboard' && !uiStore.activePanel)"></div> -->
+
                 <span class="nav-text">{{ item.label }}</span>
-                <div class="nav-bg"></div>
+
+                <div class="corner-triangle"></div>
             </div>
         </nav>
 
@@ -276,86 +290,197 @@ function setActive(id: string) {
     }
 }
 
+/* Navigation Menu */
 .nav-menu {
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 12px;
+    padding-left: 20px;
+    /* Increased to accommodate left-hanging decorations */
 }
 
+/* Base Nav Item */
 .nav-item {
     position: relative;
-    height: 50px;
+    width: 100%;
+    height: 52px;
     display: flex;
     align-items: center;
-    padding: 0 20px;
+    justify-content: center;
     cursor: pointer;
-    border: 1px solid transparent;
+    background: rgba(10, 15, 25, 0.8);
     transition: all 0.3s ease;
-    overflow: hidden;
-    clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+    border: none;
+    /* Reset existing border style */
+    padding: 0;
+    /* Content centered */
 }
 
-.nav-bg {
+/* Variables matching reference */
+.nav-item {
+    --cyan-neon: #00f5ff;
+    --cyan-glow: rgba(0, 245, 255, 0.5);
+    --cyan-border-inactive: rgba(0, 245, 255, 0.35);
+    --dark-gold: #c89a33;
+}
+
+/* ========== GOLD BAR (shared) - Outside left border ========== */
+.gold-bar {
     position: absolute;
-    top: 0;
-    left: 0;
+    left: -8px;
+    /* Outside the left border */
+    top: 4px;
+    bottom: 4px;
+    width: 3px;
+    background: linear-gradient(180deg,
+            #3e3310 0%,
+            #5c4b16 8%,
+            #7a6420 16%,
+            #a07d2a 26%,
+            #c89a33 36%,
+            #f2e6b5 48%,
+            #fff6d8 50%,
+            #f2e6b5 52%,
+            #c89a33 64%,
+            #a07d2a 74%,
+            #7a6420 84%,
+            #5c4b16 92%,
+            #3e3310 100%);
+    transition: filter 0.3s ease;
+}
+
+/* Active item gold bar with brightness 1.2 */
+.nav-item.active .gold-bar {
+    filter: brightness(1.2);
+}
+
+/* Dark Gold Triangle - Bottom Right Corner */
+.corner-triangle {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 8px;
+    height: 8px;
+    background: linear-gradient(180deg,
+            #c89a33 0%,
+            #f2e6b5 40%,
+            #f2e6b5 60%,
+            #c89a33 100%);
+
+    clip-path: polygon(0 100%, 100% 100%, 100% 0);
+    z-index: 2;
+}
+
+/* Border SVG */
+.border-svg {
+    position: absolute;
+    inset: 0;
     width: 100%;
     height: 100%;
-    background: var(--primary-cyan, #00d4ff);
-    opacity: 0;
-    z-index: 0;
-    transition: opacity 0.3s;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.border-path {
+    transition: stroke 0.3s ease;
+}
+
+/* ========== INACTIVE ITEM ========== */
+.nav-item:not(.active) .border-path {
+    stroke: var(--cyan-border-inactive);
+}
+
+.nav-item:not(.active) .nav-text {
+    color: rgba(200, 200, 210, 0.85);
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-shadow: none;
+}
+
+/* Hover Effects for Inactive */
+.nav-item:not(.active):hover .border-path {
+    stroke: rgba(0, 245, 255, 0.5);
+}
+
+.nav-item:not(.active):hover .nav-text {
+    color: rgba(230, 230, 240, 0.95);
+}
+
+/* ========== ACTIVE ITEM ========== */
+.nav-item.active {
+    background:
+        linear-gradient(180deg,
+            rgba(0, 245, 255, 0.12) 0%,
+            rgba(0, 180, 200, 0.06) 50%,
+            rgba(0, 245, 255, 0.12) 100%);
+}
+
+.nav-item.active .border-svg {
+    filter: drop-shadow(0 0 4px var(--cyan-neon)) drop-shadow(0 0 8px var(--cyan-glow));
+    animation: borderGlow 2s ease-in-out infinite;
+}
+
+.nav-item.active .border-path {
+    stroke: var(--cyan-neon);
+}
+
+/* Cyan Triangle - Left Side (Active) */
+.triangle-left {
+    position: absolute;
+    left: -24px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 10px 0 10px 12px;
+    border-color: transparent transparent transparent var(--cyan-neon);
+    filter: drop-shadow(0 0 6px var(--cyan-neon)) drop-shadow(0 0 10px var(--cyan-glow));
+    animation: trianglePulse 2s ease-in-out infinite;
+}
+
+.nav-item.active .nav-text {
+    color: var(--cyan-neon);
+    font-size: 15px;
+    font-weight: 900;
+    letter-spacing: 4px;
+    text-shadow:
+        0 0 8px var(--cyan-glow),
+        0 0 15px var(--cyan-glow);
+}
+
+/* Animations */
+@keyframes trianglePulse {
+
+    0%,
+    100% {
+        filter: drop-shadow(0 0 6px var(--cyan-neon)) drop-shadow(0 0 10px var(--cyan-glow));
+    }
+
+    50% {
+        filter: drop-shadow(0 0 10px var(--cyan-neon)) drop-shadow(0 0 18px var(--cyan-glow));
+    }
+}
+
+@keyframes borderGlow {
+
+    0%,
+    100% {
+        filter: drop-shadow(0 0 4px var(--cyan-neon)) drop-shadow(0 0 8px var(--cyan-glow));
+    }
+
+    50% {
+        filter: drop-shadow(0 0 6px var(--cyan-neon)) drop-shadow(0 0 12px var(--cyan-glow)) drop-shadow(0 0 20px rgba(0, 245, 255, 0.3));
+    }
 }
 
 .nav-text {
     position: relative;
-    z-index: 1;
-    font-family: 'Orbitron', sans-serif;
-    font-size: 1rem;
-    letter-spacing: 2px;
-    color: rgba(255, 255, 255, 0.7);
-    transition: color 0.3s;
-}
-
-.nav-indicator {
-    position: relative;
-    z-index: 1;
-    margin-right: 10px;
-    font-size: 0.8rem;
-    color: var(--primary-cyan, #00d4ff);
-    opacity: 0;
-    transform: translateX(-10px);
-    transition: all 0.3s;
-}
-
-.nav-item:hover {
-    border-color: rgba(0, 212, 255, 0.3);
-    box-shadow: 0 0 15px rgba(0, 212, 255, 0.1);
-}
-
-.nav-item:hover .nav-bg {
-    opacity: 0.1;
-}
-
-.nav-item:hover .nav-text {
-    color: #fff;
-}
-
-.nav-item.active {
-    border-color: var(--primary-cyan, #00d4ff);
-    background: rgba(0, 212, 255, 0.15);
-    box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
-}
-
-.nav-item.active .nav-text {
-    color: var(--primary-cyan, #00d4ff);
-    text-shadow: 0 0 8px rgba(0, 212, 255, 0.8);
-}
-
-.nav-item.active .nav-indicator {
-    opacity: 1;
-    transform: translateX(0);
+    z-index: 2;
+    font-family: 'Orbitron', monospace;
+    transition: all 0.3s ease;
 }
 
 .tech-specs {
